@@ -1,0 +1,116 @@
+node -v
+npm -v
+angular installation = copy command 
+paste command
+ng version
+ng new user-auth-app
+yes
+select css=enter=yes
+GitHub copiolt=enter
+cd user-auth-app
+ng serve
+yes
+link=enter=folder open=user-auth-app
+terminal
+ng serve
+follow link
+ng generate register/login/profile
+ 
+src=>app=>app.routes.ts=>
+paste above code
+
+import { Register } from './register/register';
+import { Login } from './login/login';
+import { Profile} from './profile/profile';
+
+export const routes: Routes = [
+  { path: 'register', component: Register },
+  { path: 'login', component: Login },
+  { path: 'profile', component: Profile },
+  { path: '', redirectTo: 'register', pathMatch: 'full' }
+];
+
+src/app/app.config.ts
+paste above code
+
+import { provideRouter } from '@angular/router'; //“provideRouter is used to activate routing in Angular application.”
+import { routes } from './app.routes';
+
+export const appConfig = {   //👉 This creates a configuration object for the application
+  providers: [            //“Providers array are used to configure services and features at application level.”        
+    provideRouter(routes)  //👉 Without this → routing will NOT work
+  ]
+};
+
+
+src/app/app.html
+
+<a routerLink="/register">Register</a> |
+<a routerLink="/login">Login</a> |
+<a routerLink="/profile">Profile</a>
+
+<hr>
+
+<router-outlet></router-outlet> 
+
+ng generate service user
+src/app/user.spec.ts
+
+import { Injectable } from '@angular/core';  //“Injectable is used to create a service that can be used across components.”
+
+@Injectable({           //“providedIn: root makes the service available throughout the application.”
+  providedIn: 'root'     //@Injectable Decorator
+})
+export class UserService {  👉 Defines the service class
+
+  userData: any;   //“This variable stores user data temporarily.” 
+
+  register(user: any) {   //“This method stores user data received from the register component.”
+    this.userData = user;
+  }
+
+  getUser() {
+    return this.userData;   /“This method returns stored user data to other components.”
+  }
+}
+
+
+src/app/register/register.ts
+
+import { Component } from '@angular/core'; //“Component is used to create UI part of Angular application.”
+import { FormsModule } from '@angular/forms'; //“FormsModule is used for two-way data binding.”
+import { UserService } from '../user.service'; //👉 To store user data
+import { Router } from '@angular/router'; //👉 Used for navigation (page change)
+
+@Component({                        👉 Defines component settings:  
+  selector: 'app-register',           selector → HTML tag name ,
+  standalone: true,                  standalone: true → no module needed , 
+  imports: [FormsModule],         //imports → use FormsModule
+  templateUrl: './register.html'    templateUrl → HTML file
+})
+export class RegisterComponent {         //👉 Main logic of component
+
+  user = { name: '', email: '', password: '' };     👉 Stores input values
+
+  constructor(private userService: UserService, private router: Router) {}   //👉 Injects:
+                                                                  //UserService → for storing data ,  //Router → for navigation
+  register() {
+    this.userService.register(this.user);   
+    alert("Registration Successful");
+    this.router.navigate(['/login']);     
+  }
+}
+
+
+src/app/register/register.html
+
+<h2>Register</h2>
+
+<input type="text" placeholder="Name" [(ngModel)]="user.name"><br>
+<input type="email" placeholder="Email" [(ngModel)]="user.email"><br>
+<input type="password" placeholder="Password" [(ngModel)]="user.password"><br>      //“ngModel provides two-way data binding.”
+
+<button (click)="register()">Register</button>   
+
+
+
