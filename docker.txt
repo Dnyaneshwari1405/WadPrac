@@ -1,0 +1,11 @@
+docker --version
+docker images
+docker ps
+docker pull openjdk:tag
+docker images
+docker run --name JAVA -it -d openjdk:tag
+docker ps
+docker exec -it JAVA jshell
+int a=10
+int b=10
+System.out.print(a+b)
